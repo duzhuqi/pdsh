@@ -50,8 +50,8 @@ after_failure:
   - cat tests/test-suite.log
   - echo "foo[1-10] compute" > genders.x
   - ulimit -c unlimited
-  - src/pdsh/pdsh -M genders -qa -F genders.x
-  - lldb -k bt -o "process launch -- -M genders -qa -F genders.x" src/pdsh/pdsh
+  - src/pdsh/pdsh -M genders -F ./genders.x -qa 
+  - lldb --batch -k bt -o "process launch -- -M genders -qa -F ./genders.x" src/pdsh/pdsh
 
 before_deploy:
   - make dist
