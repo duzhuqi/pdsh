@@ -809,7 +809,7 @@ _mod_load_dynamic(const char *fq_path)
      *  their parent library. This is specifically a problem with the
      *  nodeupdown and slurm modules at this time.
      */
-    if (!(mod->handle = dlopen(fq_path, RTLD_GLOBAL | RTLD_NOW)))
+    if (!(mod->handle = dlopen(fq_path, RTLD_GLOBAL | RTLD_LAZY)))
         goto fail;
 
     mod->filename = Strdup(fq_path);
