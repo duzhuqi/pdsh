@@ -13,6 +13,7 @@ addons:
       - genders
       - clang-3.8
       - gcc-6
+      - lcov
 
 cache:
   directories:
@@ -22,13 +23,15 @@ cache:
 matrix:
   include:
   - os: linux
-    env: CC=gcc
+    env: CC=gcc MAKE_ARGS="check"
   - os: linux
-    env: CC=clang
+    env: CC=clang MAKE_ARGS="check"
   - os: linux
-    env: CC=gcc-6
+    env: CC=gcc-6 MAKE_ARGS="check"
   - os: linux
-    env: CC=clang-3.8
+    env: CC=clang-3.8 MAKE_ARGS="check"
+  - os: linux
+    env: CC=gcc COVERAGE=t CONFIGURE_ARGS="--enable-code-coverage"
   - os: osx
     language: c
     osx_image: xcode8.3
@@ -39,9 +42,13 @@ script:
         eval $(scripts/travis-ci-deps.sh --printenv);
     fi
   - ./bootstrap
-  - ./configure --with-exec --with-ssh --with-mrsh --with-genders --with-dshgroups --with-netgroup --with-machines
-  - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
-  - make -j 2 check
+  - ./configure --with-exec --with-ssh --with-mrsh --with-genders --with-dshgroups --with-netgroup --with-machines ${CONFIGURE_ARGS}
+  - CFLAGS="-Werror -Wno-error=deprecated-declarations" make -j 2
+  - if test "$COVERAGE" = "t"; then make check-code-coverage; else make check; fi
+
+after_success:
+ # Upload coverage results
+ - if test "$COVERAGE" = "t"; then bash <(curl -s https://codecov.io/bash) ; fi
 
 after_failure:
   - cat tests/test-suite.log
