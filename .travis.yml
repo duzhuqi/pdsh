@@ -45,6 +45,7 @@ script:
   - ./configure --with-exec --with-ssh --with-mrsh --with-genders --with-dshgroups --with-netgroup --with-machines ${CONFIGURE_ARGS}
   - CFLAGS="-Werror -Wno-error=deprecated-declarations" make -j 2
   - if test "$COVERAGE" = "t"; then make check-code-coverage; else make check; fi
+  - (cd tests; ./t5000-dshbak.sh -d -v; ./t0006-pdcp.sh -d -v;)
 
 after_success:
  # Upload coverage results
