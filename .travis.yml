@@ -31,7 +31,7 @@ matrix:
     env: CC=clang-3.8
   - os: osx
     language: c
-    osx_image: xcode8.3
+    osx_image: xcode9.4
 
 script:
   - if  [[ "$TRAVIS_OS_NAME" = "linux" ]]; then
